@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>現在的妳，會選哪一個？</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(#faf4f9,#fff);color:#443c44;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans TC","PingFang TC",sans-serif;line-height:1.75}
+.wrap{max-width:680px;margin:auto;padding:28px 16px 50px}
+.brand{text-align:center;color:#9b7899;letter-spacing:3px;font-size:13px;margin-bottom:20px}
+.card{background:#fff;border:1px solid #eadfea;border-radius:26px;padding:25px 20px;box-shadow:0 10px 35px #76566a12}
+h1{text-align:center;font-size:31px;line-height:1.35;margin:8px 0}
+.lead{text-align:center;color:#817781;font-size:15px}
+.note{background:#faf5fa;border-radius:18px;padding:16px;margin:22px 0;color:#6f6570;font-size:14px}
+button{font-family:inherit;cursor:pointer}
+.btn{width:100%;border:0;border-radius:16px;padding:15px;background:#8f708c;color:white;font-size:16px;font-weight:bold}
+.ghost{background:white;color:#795f77;border:1px solid #d9c8d7;margin-top:10px}
+.progress{height:5px;background:#eee5ed;border-radius:9px;margin-bottom:8px;overflow:hidden}
+.bar{height:100%;width:0;background:#b895b5;transition:.3s}
+.count{text-align:right;color:#9b9099;font-size:12px}
+.question{font-size:21px;font-weight:bold;line-height:1.5;margin:8px 0 20px}
+.options{display:grid;gap:11px}
+.opt{text-align:left;width:100%;background:white;border:1px solid #eadfea;border-radius:17px;padding:14px;color:#443c44;font-size:15px}
+.opt:hover{background:#fcf7fc;border-color:#cdb3ca}
+.letter{display:inline-flex;width:28px;height:28px;border-radius:50%;background:#f2e8f1;color:#795f77;align-items:center;justify-content:center;font-weight:bold;margin-right:9px}
+.hidden{display:none}
+.result-kicker{text-align:center;color:#9b7899;letter-spacing:2px;font-size:13px}
+.result-title{text-align:center;font-size:31px;margin:4px 0 8px}
+.result-sub{text-align:center;color:#817781}
+.tags{text-align:center;margin:16px 0}
+.tag{display:inline-block;background:#f4ebf3;color:#795f77;border-radius:99px;padding:4px 11px;margin:3px;font-size:13px}
+.analysis{white-space:pre-line;font-size:15px}
+.divider{height:1px;background:#eee4ed;margin:25px 0}
+.box{background:#faf5fa;border-radius:19px;padding:18px}
+.box h3{margin:0 0 7px;font-size:18px}
+.small{font-size:13px;color:#8b8189}
+.footer{text-align:center;color:#aaa0a8;font-size:12px;margin-top:25px}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+<div class="brand">繫晶 XIJING</div>
+
+<section id="intro" class="card">
+<h1>現在的妳，會選哪一個？</h1>
+<p class="lead">一個關於「現在的自己」的小測驗</p>
+<div class="note">
+不用想太久。不要分析哪個答案比較好。<br>
+第一眼想選的，就選那個。<br><br>
+8 題，大約 2 分鐘。
+</div>
+<button class="btn" onclick="start()">開始測驗</button>
+</section>
+
+<section id="quiz" class="card hidden">
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div id="count" class="count"></div>
+<div id="question" class="question"></div>
+<div id="options" class="options"></div>
+</section>
+
+<section id="loading" class="card hidden">
+<h2 style="text-align:center">整理妳的答案中……</h2>
+<p class="lead">有一個狀態，在妳剛剛的選擇裡一直出現。</p>
+</section>
+
+<section id="result" class="card hidden">
+<div class="result-kicker">妳的結果</div>
+<h2 id="title" class="result-title"></h2>
+<p id="sub" class="result-sub"></p>
+<div id="tags" class="tags"></div>
+<div id="analysis" class="analysis"></div>
+
+<div class="divider"></div>
+
+<div class="box">
+<h3>妳身上還有一個訊號</h3>
+<p id="secondary"></p>
+</div>
+
+<div class="divider"></div>
+
+<p class="small">
+如果這個結果有一點像現在的妳，先把它留著。<br>
+也許半年後再測一次，答案會不一樣。
+</p>
+
+<p class="small">
+因為我們測的從來不是「妳是什麼樣的人」，<br>
+而是「現在的妳，正在什麼位置？」
+</p>
+
+<div class="box" style="margin-top:20px">
+<h3>這份測驗，是繫晶做的。</h3>
+<p>
+我們一直覺得，有時候人不是真的需要一個答案，
+只是需要一個機會，停下來看看自己。
+</p>
+<p>
+如果妳想把這個結果留在身邊，
+繫晶也可以從妳現在的狀態、喜歡的顏色與風格出發，
+把「現在的妳」變成一條可以每天戴著的手鏈。
+</p>
+</div>
+
+<button class="btn" style="margin-top:18px" onclick="custom()">把現在的妳，繫下來</button>
+<button class="btn ghost" onclick="share()">分享我的結果</button>
+<button class="btn ghost" onclick="start()">重新測一次</button>
+
+<div class="footer">繫晶 xijing｜把現在的妳，繫下來。</div>
+</section>
+</div>
+
+<script>
+const FORM_URL="";
+
+const R={
+"留白":{
+k:["空間","呼吸","不必填滿"],
+t:`妳可能不是想逃離生活。
+只是最近的生活裡，好像放進了太多東西。
+工作、訊息、別人的期待、應該完成的事情……
+
+所以真正讓妳覺得舒服的，反而不是「終於完成了多少」，
+而是今天終於沒有任何事情需要趕著完成。
+
+妳其實很會撐。
+只是妳現在可能越來越知道：
+有些空白，不需要被填滿。
+
+妳最近真正想要的不是更多時間，
+而是一點不用交代自己的時間。
+
+留給現在的妳：
+不用每一天，都要有所完成。`
+},
+"重新開機":{
+k:["整理","重新排序","重新開始"],
+t:`妳最近可能不是沒有方向。
+而是腦袋裡同時開了太多東西。
+
+有些事情還沒完成，有些事情想做，
+有些事情又一直擱著。
+
+所以妳真正想要的不是再增加一個目標。
+而是：重新整理一次。
+
+事情一多，妳很容易開始想：
+「好，那先處理哪一個？」
+
+妳其實很有能力把事情處理好。
+只是有時候，妳會把「全部處理完」
+當成自己可以休息的條件。
+
+問題是——事情好像永遠不會真的全部做完。
+
+留給現在的妳：
+先整理重要的，不是所有的。`
+},
+"不再配合":{
+k:["界線","選擇自己","不必解釋"],
+t:`妳可能正在慢慢發現：
+不是所有事情都要答應。
+不是每個人不開心，都需要妳負責。
+
+但真正有趣的是：
+妳可能已經會說「不」。
+
+可是說完之後，腦袋還是會偷偷想：
+「他是不是生氣了？」
+「我是不是講得太直接？」
+
+所以妳真正正在練習的，
+可能不是拒絕。
+
+而是：拒絕之後，仍然相信自己的選擇。
+
+留給現在的妳：
+別人的感受重要，但妳的感受也算數。`
+},
+"往前一點點":{
+k:["行動","勇氣","第一步"],
+t:`妳不一定是那種說走就走的人。
+妳可能會想很多、會評估、會猶豫。
+
+可是當妳真的決定了，
+其實比很多人想像中更敢做。
+
+妳最近可能常出現一種念頭：
+「要不要試試看？」
+
+可能是一個新的地方、一件以前不敢做的事情，
+一個新的計畫，甚至只是一個小小的改變。
+
+妳不需要一次走很遠。
+因為妳真正需要的，可能只是：先走第一步。
+
+留給現在的妳：
+不用知道終點，才可以出發。`
+},
+"把自己放回來":{
+k:["自我","照顧自己","我想要"],
+t:`這個結果很有意思。
+
+因為妳可能其實很清楚自己喜歡什麼。
+只是很多時候，妳會先想：
+「別人呢？」
+「這樣大家方便嗎？」
+「他會不會失望？」
+
+最後才想到：
+「那我呢？」
+
+妳可能比自己想像中更習慣照顧別人。
+
+所以當有人問：
+「妳想吃什麼？」
+妳很容易說：「都可以。」
+
+不是因為妳真的都可以。
+而是妳已經習慣讓事情簡單一點。
+
+但現在的妳可能正在慢慢改變。
+開始會想：
+「其實我想要的是這個。」
+
+這不是任性。
+只是：妳也開始把自己算進去了。
+
+留給現在的妳：
+「我想要」也是一個很好的答案。`
+},
+"換個方向":{
+k:["探索","可能性","新的路"],
+t:`原本的路沒有錯。
+
+只是妳好像開始對「一直照以前的方式走」
+有一點疑問。
+
+可能突然想學新的東西。
+突然想去一個地方。
+突然想換個生活方式。
+
+甚至只是：
+「如果不要這樣呢？」
+
+妳不是迷路。
+妳只是開始發現：
+原來人生不只有一條路。
+
+留給現在的妳：
+換個方向，不代表否定過去。`
+},
+"安靜一下":{
+k:["安靜","沉澱","降低噪音"],
+t:`妳可能比自己想像中更容易被外面的事情影響。
+
+訊息、工作、別人的情緒、社群，
+一堆還沒處理完的小事。
+
+所以當所有事情突然安靜，
+妳反而會有一種：
+「終於。」
+
+但妳有一個小矛盾：
+妳很需要安靜。
+真的安靜下來之後，腦袋卻又開始想很多。
+
+所以妳真正需要的，不一定是完全什麼都不做。
+
+而是：讓外面的聲音小一點。
+
+留給現在的妳：
+有些答案，不急著今天找到。`
+},
+"有人懂我":{
+k:["理解","陪伴","連結"],
+t:`妳不一定需要很多朋友。
+甚至不一定喜歡一直跟人待在一起。
+
+妳真正想要的可能只是：
+有人真的懂。
+
+不用解釋很多。
+不用把所有前因後果都說清楚。
+
+有時候只是一起吃頓飯、走一段路，
+妳就會覺得：
+「嗯，這樣就很好。」
+
+妳可能比別人想像中更獨立。
+
+但其實妳不是不需要陪伴。
+妳只是不要勉強的陪伴。
+
+留給現在的妳：
+真正的陪伴，不需要一直說話。`
+}
+};
+
+const S={
+"留白":"妳最近也開始更需要安靜一點，不想一直被外面的事情拉著走。",
+"重新開機":"妳身上也有一點想重新排序的訊號，想把真正重要的事情放回前面。",
+"不再配合":"妳最近也更在意界線，開始分辨什麼是妳想做的、什麼只是習慣配合。",
+"往前一點點":"妳其實已經有一點想往前走，只是希望用自己的速度。",
+"把自己放回來":"妳也正在練習把自己的感受算進來，而不是永遠排在最後。",
+"換個方向":"妳身上還有一點探索感，對「如果換一種方式呢？」開始有興趣。",
+"安靜一下":"妳也很需要把外面的聲音調小一點，才聽得見自己。",
+"有人懂我":"妳其實很在意被理解，只是不喜歡勉強自己去維持關係。"
+};
+
+const Q=[
+["如果明天突然不用工作，也沒有任何事情等著妳處理，妳會怎麼過？",[
+["睡到自然醒，再慢慢決定今天要做什麼","留白","安靜一下"],
+["找一家沒去過的店，自己去走走","換個方向","往前一點點"],
+["約一個很久沒見的人吃飯","有人懂我","把自己放回來"],
+["終於把家裡或房間整理一下","重新開機","留白"],
+["做一件一直想做、卻總說「改天」的事","往前一點點","把自己放回來"],
+["回家，把手機關掉","安靜一下","不再配合"],
+["找個舒服的地方，什麼都不安排","留白","安靜一下"],
+["看當天心情，臨時決定去哪裡","換個方向","往前一點點"]]],
+
+["如果妳突然收到一則讓妳不太舒服的訊息，妳最可能？",[
+["馬上回覆，不想讓事情卡著","重新開機","往前一點點"],
+["看了好幾次，想知道對方到底是什麼意思","安靜一下","有人懂我"],
+["先不回，等自己整理好再說","不再配合","安靜一下"],
+["先安撫對方，不希望事情變得更糟","有人懂我","把自己放回來"],
+["算了，不太想處理","留白","不再配合"],
+["找一個信任的人聊聊","有人懂我","安靜一下"],
+["直接把自己的想法說清楚","不再配合","把自己放回來"],
+["假裝沒看到，先去做別的事情","留白","安靜一下"]]],
+
+["逛街時，妳看到一樣很喜歡、但超出原本預算一點的東西。妳會：",[
+["算一下，如果真的值得就買","重新開機","把自己放回來"],
+["先離開，但回家後還一直想著它","換個方向","安靜一下"],
+["告訴自己下次再買","留白","不再配合"],
+["如果真的很喜歡，就買給自己","把自己放回來","往前一點點"],
+["覺得太貴，還是算了","重新開機","留白"],
+["傳給朋友問：「妳覺得我要買嗎？」","有人懂我","換個方向"],
+["開始想自己是不是真的需要","重新開機","留白"],
+["直接買，偶爾就是想任性一下","往前一點點","把自己放回來"]]],
+
+["一群朋友決定週末聚餐，大家都說「都可以」。妳通常會：",[
+["直接提出一個地點","往前一點點","重新開機"],
+["看大家的反應再決定","有人懂我","安靜一下"],
+["「你們決定就好，我都可以。」","把自己放回來","不再配合"],
+["只要不要太麻煩，去哪都可以","留白","重新開機"],
+["提幾個選項讓大家選","重新開機","有人懂我"],
+["如果有自己不喜歡的地方，就會說出來","不再配合","把自己放回來"],
+["原本不太想去，但最後還是去了","把自己放回來","不再配合"],
+["覺得一直討論很累，乾脆不參加","安靜一下","不再配合"]]],
+
+["如果今天可以把自己放進一個畫面裡，妳最想去哪裡？",[
+["清晨的窗邊，陽光剛剛進來","留白","安靜一下"],
+["黃昏的海邊，遠處沒有其他人","安靜一下","留白"],
+["夜晚的城市，街上的燈一盞一盞亮起來","有人懂我","換個方向"],
+["下過雨的森林，空氣裡還有水氣","安靜一下","留白"],
+["一間暖黃色燈光的小店","有人懂我","把自己放回來"],
+["山頂，風吹過來，可以看得很遠","往前一點點","換個方向"],
+["一條不知道通往哪裡的小路","換個方向","往前一點點"],
+["清晨還沒開始忙碌的城市","重新開機","留白"]]],
+
+["如果有人突然對妳說：「妳最近不用這麼努力。」妳第一個反應比較接近：",[
+["「可是事情還是要做啊。」","重新開機","往前一點點"],
+["「……我知道。」","安靜一下","把自己放回來"],
+["「我哪有很努力？」","把自己放回來","有人懂我"],
+["「聽到這句話，突然有點想哭。」","有人懂我","把自己放回來"],
+["「那我是不是可以休息一下？」","留白","把自己放回來"],
+["「我其實只是想把事情做好。」","重新開機","把自己放回來"],
+["「我不需要別人替我決定。」","不再配合","把自己放回來"],
+["「我最近真的有點累。」","安靜一下","留白"]]],
+
+["如果生活現在是一個房間，妳最想先做什麼？",[
+["打開窗戶","留白","換個方向"],
+["把東西整理好","重新開機","留白"],
+["換掉燈光","換個方向","把自己放回來"],
+["把門關起來","不再配合","安靜一下"],
+["搬走一些東西","留白","不再配合"],
+["添一些自己喜歡的東西","把自己放回來","留白"],
+["什麼都不動，先坐一下","安靜一下","留白"],
+["直接走出去","往前一點點","換個方向"]]],
+
+["最後一題。如果現在的妳可以收到一句話，妳最希望聽到：",[
+["「不用急。」","安靜一下","留白"],
+["「妳可以選自己。」","把自己放回來","不再配合"],
+["「去試試看。」","往前一點點","換個方向"],
+["「妳已經做得很好了。」","有人懂我","把自己放回來"],
+["「不用什麼都自己來。」","有人懂我","留白"],
+["「重新開始也沒關係。」","重新開機","換個方向"],
+["「妳不需要證明什麼。」","不再配合","把自己放回來"],
+["「慢慢來，我會陪妳。」","有人懂我","安靜一下"]]]
+];
+
+let n=0,ans=[],last="";
+
+function start(){
+n=0;ans=[];
+document.getElementById("intro").classList.add("hidden");
+document.getElementById("result").classList.add("hidden");
+document.getElementById("loading").classList.add("hidden");
+document.getElementById("quiz").classList.remove("hidden");
+showQ();
+}
+
+function showQ(){
+let q=Q[n];
+document.getElementById("count").textContent=(n+1)+" / "+Q.length;
+document.getElementById("bar").style.width=(n/Q.length*100)+"%";
+document.getElementById("question").textContent=q[0];
+let box=document.getElementById("options");
+box.innerHTML="";
+q[1].forEach((o,i)=>{
+let b=document.createElement("button");
+b.className="opt";
+b.innerHTML='<span class="letter">'+String.fromCharCode(65+i)+'</span>'+o[0];
+b.onclick=()=>choose(i);
+box.appendChild(b);
+});
+}
+
+function choose(i){
+ans.push(Q[n][1][i]);
+n++;
+if(n<Q.length)showQ();
+else finish();
+}
+
+function finish(){
+document.getElementById("quiz").classList.add("hidden");
+document.getElementById("loading").classList.remove("hidden");
+setTimeout(result,700);
+}
+
+function result(){
+let score={};
+Object.keys(R).forEach(x=>score[x]=0);
+ans.forEach(x=>{score[x[1]]+=2;score[x[2]]+=1});
+let rank=Object.keys(score).sort((a,b)=>score[b]-score[a]);
+let main=rank[0],second=rank[1];
+last=main;
+
+document.getElementById("loading").classList.add("hidden");
+document.getElementById("result").classList.remove("hidden");
+document.getElementById("title").textContent=main;
+document.getElementById("sub").textContent="妳現在比較靠近「"+main+"」，而妳身上還有一點「"+second+"」。";
+document.getElementById("analysis").textContent=R[main].t;
+document.getElementById("secondary").textContent=S[second];
+document.getElementById("tags").innerHTML=R[main].k.map(x=>'<span class="tag">'+x+'</span>').join("");
+window.scrollTo(0,0);
+}
+
+function custom(){
+if(FORM_URL)location.href=FORM_URL;
+else alert("客製化表單尚未設定。之後把 Google 表單網址填入程式中的 FORM_URL 即可。");
+}
+
+async function share(){
+let text="我測到的是「"+last+"」｜《現在的妳，會選哪一個？》";
+if(navigator.share){
+try{await navigator.share({title:"現在的妳，會選哪一個？",text:text,url:location.href})}catch(e){}
+}else{
+try{await navigator.clipboard.writeText(location.href);alert("測驗網址已複製！")}catch(e){alert(text)}
+}
+}
+</script>
+</body>
+</html>
