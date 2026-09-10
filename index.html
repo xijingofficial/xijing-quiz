@@ -440,6 +440,7 @@ ans.forEach(x=>{score[x[1]]+=2;score[x[2]]+=1});
 let rank=Object.keys(score).sort((a,b)=>score[b]-score[a]);
 let main=rank[0],second=rank[1];
 last=main;
+window.lastSecondary=second;
 
 document.getElementById("loading").classList.add("hidden");
 document.getElementById("result").classList.remove("hidden");
@@ -453,7 +454,12 @@ window.scrollTo(0,0);
 
 function custom(){
   const formUrl="https://docs.google.com/forms/d/e/1FAIpQLScIiR7Bpvglo65zjAbK-ENGSOi2aBDHvy3QbXe2QRn73dEVWQ/viewform";
-  if(formUrl)location.href=formUrl;
+  const url=formUrl
+    +"?usp=pp_url"
+    +"&entry.1243591497="+encodeURIComponent(last)
+    +"&entry.326638800="+encodeURIComponent(window.lastSecondary);
+
+  location.href=url;
 }
 
 async function share(){
