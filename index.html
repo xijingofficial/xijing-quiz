@@ -452,8 +452,8 @@ window.scrollTo(0,0);
 }
 
 function custom(){
-if(FORM_URL)location.href=FORM_URL;
-else alert("客製化表單尚未設定。之後把 Google 表單網址填入程式中的 FORM_URL 即可。");
+  const formUrl="https://docs.google.com/forms/d/e/1FAIpQLScIiR7Bpvglo65zjAbK-ENGSOi2aBDHvy3QbXe2QRn73dEVWQ/viewform";
+  if(formUrl)location.href=formUrl;
 }
 
 async function share(){
