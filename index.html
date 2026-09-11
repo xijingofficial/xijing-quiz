@@ -115,9 +115,7 @@ button{font-family:inherit;cursor:pointer}
 領取 NT$100 折價券
 </button>
 
-<div id="couponCode" class="coupon-code">
-XIJING100
-</div>
+<div id="couponCode" class="coupon-code"></div>
 
 <p class="coupon-note">
 領取後 7 天內有效｜每人限用一次｜不得與其他優惠合併
@@ -472,6 +470,44 @@ document.getElementById("tags").innerHTML=R[main].k.map(x=>'<span class="tag">'+
 window.scrollTo(0,0);
 }
 
+function claimCoupon(){
+  const couponElement=document.getElementById("couponCode");
+
+  let coupon=localStorage.getItem("xijingCoupon");
+
+  if(!coupon){
+    const chars="ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+    let code="";
+
+    for(let i=0;i<4;i++){
+      code+=chars[Math.floor(Math.random()*chars.length)];
+    }
+
+    const now=new Date();
+    const expire=new Date(now.getTime()+7*24*60*60*1000);
+
+    const expireDate=
+      expire.getFullYear()+"/"+
+      String(expire.getMonth()+1).padStart(2,"0")+"/"+
+      String(expire.getDate()).padStart(2,"0");
+
+    coupon={
+      code:"XJ100-"+code,
+      expire:expireDate
+    };
+
+    localStorage.setItem("xijingCoupon",JSON.stringify(coupon));
+  }else{
+    coupon=JSON.parse(coupon);
+  }
+
+  couponElement.innerHTML=
+    "優惠碼｜"+coupon.code+
+    "<br>有效至 "+coupon.expire;
+
+  couponElement.style.display="block";
+}
+  
 function custom(){
   const FORM_URL="https://docs.google.com/forms/d/e/1FAIpQLScIiR7Bpvglo65zjAbK-ENGSOi2aBDHvy3QbXe2QRn73dEVWQ/viewform";
   const url=FORM_URL
